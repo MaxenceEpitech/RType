@@ -41,7 +41,7 @@ namespace RType {
                     _actualize = genActualizeTime(lvl);
                     _lastSpawn = std::chrono::high_resolution_clock::now();
                     if (_enemyLeft > 1) {
-                        createBasic(lvl);
+                        createBasic();
                     } else {
                         createBoss(lvl);
                     }
@@ -51,7 +51,7 @@ namespace RType {
         }
     }
 
-    void SLevel::createBasic(int lvl) {
+    void SLevel::createBasic() {
         _enemyLeft--;
         _entityManager->CreateEntity(EEntity::basicMonster);
         Id id = _entityManager->getLastEntityId();

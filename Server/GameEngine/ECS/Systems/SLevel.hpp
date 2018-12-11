@@ -20,7 +20,7 @@ namespace RType {
         SLevel(std::shared_ptr<ComponentManager> componentManager, std::shared_ptr<EntityManager> entityManager);
 
         void update(std::shared_ptr<AComponent> component);
-        void createBasic(int lvl);
+        void createBasic();
         void createBoss(int lvl);
         int genActualizeTime(int lvl);
 

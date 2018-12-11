@@ -45,7 +45,6 @@ namespace RType {
                 break;
             case Packet::GAME_OVER:
                 _lost = true;
-                //std::cout << "GAME OVER, you lost" << std::endl;
                 break;
             case Packet::HEALTH:
                 packetHealth = Packet::Unpacker::UnpackHealth(packet);
@@ -64,7 +63,6 @@ namespace RType {
             eventHandler.HandleEvents(_Window);
             sf::Packet packet;
             while (_Client->Receive(packet)) {
-                //std::cerr << "Got a packet, time to switch case" << std::endl;
                 interpretPacket(packet, turn);
                 turn = 1;
             }

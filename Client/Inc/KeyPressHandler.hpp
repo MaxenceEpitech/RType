@@ -16,16 +16,16 @@ public:
 
     void HandleKeyPress() {
         Packet::Actions actions;
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
             actions.push_back(Packet::Action::UP);
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
             actions.push_back(Packet::Action::RIGHT);
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
             actions.push_back(Packet::Action::DOWN);
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
             actions.push_back(Packet::Action::LEFT);
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
