@@ -1,0 +1,10 @@
+/home/max/Ide/clion-2018.2.4/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/max/Documents/Private_GitHub/RType/Client
+-- Current conanbuildinfo.cmake directory: /home/max/Documents/Private_GitHub/RType/Client/cmake-build-debug
+-- WARN: conaninfo.txt not found
+-- WARN: CONAN_COMPILER variable not set, please make sure yourself that your compiler and version matches your declared settings
+-- Conan: Using cmake global configuration
+-- Conan: Adjusting default RPATHs Conan policies
+-- Conan: Adjusting language standard
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/max/Documents/Private_GitHub/RType/Client/cmake-build-debug

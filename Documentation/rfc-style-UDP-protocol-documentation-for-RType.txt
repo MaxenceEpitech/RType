@@ -1,0 +1,169 @@
+Network Working Group                                         Marc PEREZ
+                                                              EPITECH Paris
+                                                              December 2018
+
+             Network Protocol for UDP Communication in Rtype
+
+Status of this Memo
+
+    This is not a Request for Comments, as it has not received
+    a serial number.
+    This document is more of an Internet Draft as it is
+    a Work-In-Progress, but without the 6 months validity date.
+    This memo provides information for the developpers of project RType.
+    This memo does not specify a standard of any kind.
+    Distribution of this memo is unlimited.
+
+Notes:
+
+      The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and
+      "OPTIONAL" in this document are to be interpreted as described in
+      RFC 2119.
+
+Table of Contents
+
+   I.   Introduction. . . . . . . . . . . . . . . . . . . . . . . . 1
+   II.  Commands without connection . . . . . . . . . . . . . . . . 2
+   III. Commands with connection. . . . . . . . . . . . . . . . . . 3
+
+
+
+
+
+Marc PEREZ                                                    [Page 1]
+             Network Protocol for UDP Communication in Rtype
+
+1. Introduction
+
+The communication protocol is a binary protocol, we will not be sending
+human readable commands as they take time to parse.
+Every Network command MUST have an enum Packet::Type as the first datum.
+This enum can be extracted with Packet::GetEnum(packet), to be used in a
+switch statement.
+The majority of packets have an OPTIONAL struct datum after the type enum.
+Example packet:
+|----|-----------|
+|TYPE|(STRUCTURE)|
+|----|-----------|
+The packet SHOULD be less than Packet::MAX_SIZE bytes.
+Packet::MAX_SIZE equals to 508 and is the current maximum unfragmented
+packet size.
+This ensures minimal packet loss.
+
+
+
+
+
+Marc PEREZ                                                    [Page 2]
+             Network Protocol for UDP Communication in Rtype
+
+II. Commands without connection
+
+To operate normally, the server will accept some commands without
+needing connection.
+
+II.1 LIST_LOBBIES and LOBBIES
+The first command is LIST_LOBBIES, which requests a list of information
+on the current lobbies in the server, this command doesn't have
+a structure.
+|------------------|
+|TYPE: LIST_LOBBIES|
+|------------------|
+
+On reception, the server will craft a LOBBIES packet, which contains the
+list of information on the current lobbies in the server.
+The structure is Packet::Lobbies.
+|-------------|-----------------------|
+|TYPE: LOBBIES|STRUCT: Packet::Lobbies|
+|-------------|-----------------------|
+
+The transaction looks like this:
+Client -> LIST_LOBBIES -> Server
+Server -> LOBBIES -> Client
+
+II.2 CONNECT
+After receiving the list of lobbies, the client can chose to connect to
+an existing lobby, it can do so with the CONNECT command.
+The additional datum is an sf::Uint32 which contains the index of the
+lobby to connect to.
+|-------------|------------------|
+|TYPE: CONNECT|STRUCT: sf::Uint32|
+|-------------|------------------|
+If the connection succeeds, the server will send a client ID from 1 to
+Packet::MAX_CLIENT (Currently 4).
+Otherwise, if an error occurs (like if the lobby is full), the client ID
+sent back will be 0.
+The client ID is currently stored on 1 Byte (8 bits).
+
+The transaction looks like this:
+Client -> CONNECT -> Server
+Server -> clientID -> Client
+
+II.3 CREATE
+If the client wants to join a new lobby, he can request its creation
+with the CREATE packet.
+|------------|
+|TYPE: CREATE|
+|------------|
+The CREATE packet creates a new lobby on the server and connects
+the client to it.
+On connection, the client will receive its client ID (cf. I.2 CONNECT).
+
+The transaction looks like this:
+Client -> CREATE -> Server
+Server -> clientID -> Client
+
+II.4 DISCONNECT
+If the client closes properly the game (closes the window),
+It will send a DISCONNECT packet to the server to remove the player
+entity from the lobby (and removes the lobby if the lobby is empty)
+|----------------|
+|TYPE: DISCONNECT|
+|----------------|
+
+
+Marc PEREZ                                                    [Page 3]
+             Network Protocol for UDP Communication in Rtype
+
+III. Commands with connection
+
+When the client is connected to the lobby, there will be an exchange of
+packets that contain info about the game.
+
+III.1 GRAPHIC
+When the world inside the lobby has finished updating, it will send the
+Packet::Graphic struct (sprite enum + position)
+|-------------|-----------------------|
+|TYPE: GRAPHIC|STRUCT: Packet::Graphic|
+|-------------|-----------------------|
+
+III.2 ACTIONS
+When the client presses 1 or more keys, he will send an ACTIONS packet
+The action packet contains an std::vector of Action enum.
+Actions can be UP, DOWN, LEFT, RIGHT, SHOOT
+|-------------|-----------------------|
+|TYPE: ACTIONS|STRUCT: Packet::Actions|
+|-------------|-----------------------|
+
+III.3 REFRESH
+To ensure a smooth gaming experience, the client plays at 30 fps.
+When the timer expires, a REFRESH packet is sent to notify the server
+to send the new GRAPHIC packets.
+|-------------|
+|TYPE: REFRESH|
+|-------------|
+
+III.4 GAME_OVER
+When the player loses all his health, he dies and the server notifies
+the client with a GAME_OVER packet to display the game over screen.
+|---------------|
+|TYPE: GAME_OVER|
+|---------------|
+
+III.5 HEALTH
+The server sends regularly HEALTH packets to update the player's
+health bar at the bottom of the screen.
+|------------|
+|TYPE: HEALTH|
+|------------|

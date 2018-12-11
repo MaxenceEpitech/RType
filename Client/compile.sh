@@ -1,0 +1,1 @@
+g++ -o client -std=c++1z Src/*.cpp -I./Inc -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio

@@ -1,0 +1,19 @@
+[requires]
+boost_asio/1.65.1@bincrafters/stable
+sfml/2.5.1@bincrafters/stable
+
+[options]
+
+sfml:graphics=True
+sfml:window=True
+
+sfml:audio=True
+# sfml:audio tries to compile libalsa with python3 but it only supports python2
+# it doesn't need python anyway
+libalsa:disable_python=True
+
+sfml:network=True
+
+
+[generators]
+cmake
