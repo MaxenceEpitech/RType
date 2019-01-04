@@ -1,4 +1,4 @@
-# Wolf3d
+# RType
 ![](public/demo.gif)
 
 Rtype is a copy of the RType game made in 1987.
